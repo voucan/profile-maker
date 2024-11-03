@@ -92,16 +92,14 @@
         <img id="profileImagePreview" class="preview-image" src="" alt="Profile Preview" style="display: none;">
     </div>
     <div class="form-group">
-        <label for="music">Upload Music</label>
-        <input type="file" id="music" accept="audio/*" onchange="previewMusic(event)">
-        <audio id="musicPreview" controls style="display: none;"></audio>
+        <label for="music">MP3 Link</label>
+        <input type="text" id="music" placeholder="Enter MP3 link">
     </div>
     <button class="generate-btn" onclick="generateProfile()">Generate Profile</button>
 </div>
 
 <script>
     let profileImageData = null;
-    let musicData = null;
 
     function previewImage(event) {
         const file = event.target.files[0];
@@ -117,34 +115,18 @@
         }
     }
 
-    function previewMusic(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const musicPreview = document.getElementById('musicPreview');
-                musicPreview.src = e.target.result;
-                musicPreview.style.display = 'block';
-                musicData = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     function generateProfile() {
         const username = encodeURIComponent(document.getElementById('username').value);
         const bio = encodeURIComponent(document.getElementById('bio').value);
-        
-        if (!username || !bio) {
-            alert("Please fill in all fields.");
+        const musicLink = document.getElementById('music').value;
+
+        if (!username || !bio || !musicLink || !profileImageData) {
+            alert("Please fill in all fields and upload an image.");
             return;
         }
 
-        const profileImage = profileImageData ? encodeURIComponent(profileImageData) : '';
-        const music = musicData ? encodeURIComponent(musicData) : '';
-        
-        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${profileImage}&music=${music}`;
-        
+        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${encodeURIComponent(profileImageData)}&music=${encodeURIComponent(musicLink)}`;
+
         window.location.href = profileURL;
     }
 </script>

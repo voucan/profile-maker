@@ -35,16 +35,14 @@
             margin-bottom: 5px;
             font-size: 14px;
         }
-        .form-group input[type="text"],
-        .form-group input[type="file"] {
+        .form-group input[type="text"] {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
             border: none;
             font-size: 16px;
         }
-        .form-group input[type="text"]:focus,
-        .form-group input[type="file"]:focus {
+        .form-group input[type="text"]:focus {
             outline: none;
             border: 2px solid #555;
         }
@@ -87,9 +85,8 @@
         <input type="text" id="bio" placeholder="Tell us about yourself">
     </div>
     <div class="form-group">
-        <label for="profileImage">Profile Image</label>
-        <input type="file" id="profileImage" accept="image/*" onchange="previewImage(event)">
-        <img id="profileImagePreview" class="preview-image" src="" alt="Profile Preview" style="display: none;">
+        <label for="profileImage">Profile Image URL</label>
+        <input type="text" id="profileImage" placeholder="Enter image URL">
     </div>
     <div class="form-group">
         <label for="music">MP3 Link</label>
@@ -99,33 +96,18 @@
 </div>
 
 <script>
-    let profileImageData = null;
-
-    function previewImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('profileImagePreview');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-                profileImageData = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     function generateProfile() {
         const username = encodeURIComponent(document.getElementById('username').value);
         const bio = encodeURIComponent(document.getElementById('bio').value);
+        const profileImageLink = document.getElementById('profileImage').value;
         const musicLink = document.getElementById('music').value;
 
-        if (!username || !bio || !musicLink || !profileImageData) {
-            alert("Please fill in all fields and upload an image.");
+        if (!username || !bio || !profileImageLink || !musicLink) {
+            alert("Please fill in all fields.");
             return;
         }
 
-        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${encodeURIComponent(profileImageData)}&music=${encodeURIComponent(musicLink)}`;
+        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${encodeURIComponent(profileImageLink)}&music=${encodeURIComponent(musicLink)}`;
 
         window.location.href = profileURL;
     }

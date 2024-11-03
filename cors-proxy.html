@@ -7,40 +7,36 @@
 </head>
 <body>
     <script>
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('data');
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
         }
 
-        async function fetchContent(url) {
-            if (!url) {
-                document.body.innerText = 'No URL provided.';
-                return;
-            }
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        async function fetchAudio() {
+            const audioUrl = getUrlParameter('data');
+            if (audioUrl) {
+                try {
+                    const response = await fetch(audioUrl);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const blob = await response.blob();
+                    const audioElement = document.createElement('audio');
+                    audioElement.controls = true;
+                    audioElement.src = URL.createObjectURL(blob);
+                    document.body.appendChild(audioElement);
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    const errorMessage = document.createElement('p');
+                    errorMessage.textContent = 'Failed to load audio: ' + error.message;
+                    document.body.appendChild(errorMessage);
                 }
-                const contentType = response.headers.get('Content-Type');
-                const data = await response.blob();
-                const blobURL = URL.createObjectURL(data);
-
-                if (contentType.startsWith('audio/mpeg')) {
-                    document.body.innerHTML = `<audio controls autoplay src="${blobURL}" style="width: 100%;"></audio>`;
-                } else if (contentType.startsWith('image/')) {
-                    document.body.innerHTML = `<img src="${blobURL}" alt="Image" style="max-width: 100%; height: auto;" />`;
-                } else {
-                    const text = await response.text();
-                    document.body.innerText = text;
-                }
-            } catch (error) {
-                document.body.innerText = 'Error fetching the URL: ' + error;
+            } else {
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'No audio URL provided in the parameters.';
+                document.body.appendChild(errorMessage);
             }
         }
 
-        const urlToFetch = getQueryParams();
-        fetchContent(urlToFetch);
+        window.onload = fetchAudio;
     </script>
 </body>
 </html>

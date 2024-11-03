@@ -3,35 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CORS PROXY</title>
+    <title>Fetch Content</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #output { white-space: pre-wrap; margin: 20px; }
+    </style>
 </head>
 <body>
+    <div id="output"></div>
     <script>
-
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return params.get('data');
         }
 
-   
         async function fetchContent(url) {
             if (!url) {
-                console.error('No URL provided.');
+                displayOutput('No URL provided.');
                 return;
             }
-
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const data = await response.text(); 
-                console.log(data);
+                const data = await response.text();
+                displayOutput(data);
             } catch (error) {
-                console.error('Error fetching the URL:', error);
+                displayOutput('Error fetching the URL: ' + error);
             }
         }
 
+        function displayOutput(message) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.textContent += message + '\n';
+        }
 
         const urlToFetch = getQueryParams();
         fetchContent(urlToFetch);

@@ -113,7 +113,11 @@
         document.getElementById('username').textContent = username;
         document.getElementById('bio').textContent = bio;
         document.getElementById('profileImage').src = profileImage;
-        document.getElementById('audioSource').src = audioSrc;
+
+        // Prepend the CORS proxy URL to the audio source
+        const corsProxy = 'https://voucan.github.io/profile-pages/cors-proxy?data=';
+        const audioLink = corsProxy + encodeURIComponent(audioSrc);
+        document.getElementById('audioSource').src = audioLink;
 
         const canvas = document.getElementById('visualizerCanvas');
         const audio = document.getElementById('audio');

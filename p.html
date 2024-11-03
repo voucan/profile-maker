@@ -104,7 +104,7 @@
         const username = urlParams.get('username') || 'DefaultUsername';
         const bio = urlParams.get('bio') || 'This is a default bio.';
         const profileImage = urlParams.get('profileImage') || 'https://via.placeholder.com/120';
-        const audioSrc = urlParams.get('data') || '';
+        const audioSrc = urlParams.get('data'); // Changed to correctly fetch from 'data' parameter
 
         document.title = `${username} - Profile`;
         document.querySelector('meta[property="og:title"]').content = username;

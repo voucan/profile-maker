@@ -97,10 +97,10 @@
 
 <script>
     function generateProfile() {
-        const username = encodeURIComponent(document.getElementById('username').value);
-        const bio = encodeURIComponent(document.getElementById('bio').value);
-        const profileImageLink = document.getElementById('profileImage').value;
-        const musicLink = document.getElementById('music').value;
+        const username = encodeURIComponent(document.getElementById('username').value.trim());
+        const bio = encodeURIComponent(document.getElementById('bio').value.trim());
+        const profileImageLink = document.getElementById('profileImage').value.trim();
+        const musicLink = document.getElementById('music').value.trim();
 
         if (!username || !bio || !profileImageLink || !musicLink) {
             alert("Please fill in all fields.");

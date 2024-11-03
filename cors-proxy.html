@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP3 Autoplay</title>
+    <title>CORS Proxy</title>
 </head>
 <body>
     <script>
@@ -24,19 +24,12 @@
                 }
                 const contentType = response.headers.get('Content-Type');
                 const data = await response.blob();
+                const blobURL = URL.createObjectURL(data);
 
                 if (contentType.startsWith('audio/mpeg')) {
-                    const audio = document.createElement('audio');
-                    audio.controls = true;
-                    audio.autoplay = true; // Autoplay enabled
-                    audio.src = URL.createObjectURL(data);
-                    document.body.innerHTML = '';
-                    document.body.appendChild(audio);
+                    document.body.innerHTML = `<audio controls autoplay src="${blobURL}" style="width: 100%;"></audio>`;
                 } else if (contentType.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(data);
-                    document.body.innerHTML = '';
-                    document.body.appendChild(img);
+                    document.body.innerHTML = `<img src="${blobURL}" alt="Image" style="max-width: 100%; height: auto;" />`;
                 } else {
                     const text = await response.text();
                     document.body.innerText = text;

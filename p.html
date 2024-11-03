@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Profile Card">
     <meta property="og:description" content="View my profile card">
-    <meta property="og:image" content="PROFILE_IMAGE">
     <title>USERNAME - Profile</title>
     <link rel="icon" href="PROFILE_ICON" type="image/png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -96,6 +95,7 @@
     <canvas id="visualizerCanvas"></canvas>
     <audio id="audio" loop>
         <source id="audioSource" src="" type="audio/mp3">
+        Your browser does not support the audio element.
     </audio>
 
     <script>
@@ -114,7 +114,11 @@
         document.getElementById('username').textContent = username;
         document.getElementById('bio').textContent = bio;
         document.getElementById('profileImage').src = profileImage;
-        document.getElementById('audioSource').src = audioSrc;
+
+        // Using the CORS proxy for the audio source
+        const corsProxy = 'https://api.codetabs.com/v1/proxy?quest=';
+        const audioLink = corsProxy + encodeURIComponent(audioSrc);
+        document.getElementById('audioSource').src = audioLink;
 
         const canvas = document.getElementById('visualizerCanvas');
         const audio = document.getElementById('audio');

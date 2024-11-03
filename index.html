@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Comfortaa', sans-serif;
+        }
+        .form-container {
+            background-color: #1f1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            width: 300px;
+            text-align: center;
+        }
+        .form-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border: 2px solid #555;
+        }
+        .preview-image {
+            margin: 10px 0;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .generate-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .generate-btn:hover {
+            background-color: #45a049;
+        }
+        audio {
+            margin-top: 15px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Customize Your Profile</h1>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username">
+    </div>
+    <div class="form-group">
+        <label for="bio">Bio</label>
+        <input type="text" id="bio" placeholder="Tell us about yourself">
+    </div>
+    <div class="form-group">
+        <label for="profileImage">Profile Image</label>
+        <input type="file" id="profileImage" accept="image/*" onchange="previewImage(event)">
+        <img id="profileImagePreview" class="preview-image" src="" alt="Profile Preview" style="display: none;">
+    </div>
+    <div class="form-group">
+        <label for="music">Upload Music</label>
+        <input type="file" id="music" accept="audio/*" onchange="previewMusic(event)">
+        <audio id="musicPreview" controls style="display: none;"></audio>
+    </div>
+    <button class="generate-btn" onclick="generateProfile()">Generate Profile</button>
+</div>
+
+<script>
+    let profileImageData = null;
+    let musicData = null;
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('profileImagePreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                profileImageData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function previewMusic(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const musicPreview = document.getElementById('musicPreview');
+                musicPreview.src = e.target.result;
+                musicPreview.style.display = 'block';
+                musicData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function generateProfile() {
+        const username = encodeURIComponent(document.getElementById('username').value);
+        const bio = encodeURIComponent(document.getElementById('bio').value);
+        const profileURL = `profile.html?username=${username}&bio=${bio}`;
+
+
+        if (profileImageData) localStorage.setItem('profileImage', profileImageData);
+        if (musicData) localStorage.setItem('music', musicData);
+
+        window.location.href = profileURL;
+    }
+</script>
+
+</body>
+</html>

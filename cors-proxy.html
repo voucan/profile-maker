@@ -37,6 +37,7 @@
                 } else if (contentType.startsWith('audio/')) {
                     const audio = document.createElement('audio');
                     audio.controls = true;
+                    audio.autoplay = true; // Autoplay enabled
                     audio.src = URL.createObjectURL(data);
                     document.body.innerHTML = ''; 
                     document.body.appendChild(audio);

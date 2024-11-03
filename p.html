@@ -104,7 +104,7 @@
         const username = urlParams.get('username') || 'DefaultUsername';
         const bio = urlParams.get('bio') || 'This is a default bio.';
         const profileImage = urlParams.get('profileImage') || 'https://via.placeholder.com/120';
-        const audioSrc = urlParams.get('music') || '';
+        const audioSrc = urlParams.get('data') || '';
 
         document.title = `${username} - Profile`;
         document.querySelector('meta[property="og:title"]').content = username;
@@ -166,25 +166,31 @@
             });
         }
 
-        function fetchAudio() {
-            fetch(audioSrc)
-                .then(response => {
+        async function fetchAudio() {
+            if (audioSrc) {
+                try {
+                    const response = await fetch(audioSrc);
                     if (!response.ok) throw new Error('Network response was not ok');
-                    return response.blob();
-                })
-                .then(blob => {
+                    const blob = await response.blob();
                     const blobUrl = URL.createObjectURL(blob);
                     document.getElementById('audioSource').src = blobUrl;
                     audio.load();
-                })
-                .catch(error => {
-                    console.log('Fetch error:', error);
-                });
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    const errorMessage = document.createElement('p');
+                    errorMessage.textContent = 'Failed to load audio: ' + error.message;
+                    document.body.appendChild(errorMessage);
+                }
+            } else {
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'No audio URL provided in the parameters.';
+                document.body.appendChild(errorMessage);
+            }
         }
 
         window.addEventListener('resize', setupCanvas);
         setupCanvas();
-        fetchAudio();
+        window.onload = fetchAudio;
     </script>
 
 </body>

@@ -157,6 +157,16 @@
 
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
+            audio.play().then(() => {
+                if (!audioContext) {
+                    setupAudio();
+                }
+            }).catch(error => {
+                console.log('Audio play failed:', error);
+            });
+        }
+
+        function fetchAudio() {
             fetch(audioSrc)
                 .then(response => {
                     if (!response.ok) throw new Error('Network response was not ok');
@@ -166,13 +176,6 @@
                     const blobUrl = URL.createObjectURL(blob);
                     document.getElementById('audioSource').src = blobUrl;
                     audio.load();
-                    audio.play().then(() => {
-                        if (!audioContext) {
-                            setupAudio();
-                        }
-                    }).catch(error => {
-                        console.log('Audio play failed:', error);
-                    });
                 })
                 .catch(error => {
                     console.log('Fetch error:', error);
@@ -181,6 +184,7 @@
 
         window.addEventListener('resize', setupCanvas);
         setupCanvas();
+        fetchAudio();
     </script>
 
 </body>

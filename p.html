@@ -115,7 +115,6 @@
         document.getElementById('username').textContent = username;
         document.getElementById('bio').textContent = bio;
         document.getElementById('profileImage').src = profileImage;
-        document.getElementById('audioSource').src = audioSrc;
 
         const canvas = document.getElementById('visualizerCanvas');
         const audio = document.getElementById('audio');
@@ -158,13 +157,26 @@
 
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
-            audio.play().then(() => {
-                if (!audioContext) {
-                    setupAudio();
-                }
-            }).catch(error => {
-                console.log('Audio play failed:', error);
-            });
+            fetch(audioSrc)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.blob();
+                })
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    document.getElementById('audioSource').src = blobUrl;
+                    audio.load();
+                    audio.play().then(() => {
+                        if (!audioContext) {
+                            setupAudio();
+                        }
+                    }).catch(error => {
+                        console.log('Audio play failed:', error);
+                    });
+                })
+                .catch(error => {
+                    console.log('Fetch error:', error);
+                });
         }
 
         window.addEventListener('resize', setupCanvas);

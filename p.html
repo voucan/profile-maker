@@ -114,7 +114,6 @@
         document.getElementById('username').textContent = username;
         document.getElementById('bio').textContent = bio;
         document.getElementById('profileImage').src = profileImage;
-        document.getElementById('audioSource').src = audioSrc;
 
         const canvas = document.getElementById('visualizerCanvas');
         const audio = document.getElementById('audio');
@@ -155,14 +154,30 @@
             requestAnimationFrame(animate);
         }
 
+        async function fetchAudio() {
+            if (audioSrc) {
+                try {
+                    const response = await fetch(audioSrc);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const blob = await response.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    audio.src = objectUrl;
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+            }
+        }
+
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
-            audio.play().then(() => {
-                if (!audioContext) {
-                    setupAudio();
-                }
-            }).catch(error => {
-                console.log('Audio play failed:', error);
+            fetchAudio().then(() => {
+                audio.play().then(() => {
+                    if (!audioContext) {
+                        setupAudio();
+                    }
+                }).catch(error => {
+                    console.log('Audio play failed:', error);
+                });
             });
         }
 

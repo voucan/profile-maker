@@ -24,7 +24,7 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
+                    throw new Error('Network response was not ok');
                 }
                 const contentType = response.headers.get('Content-Type');
                 const data = await response.blob();
@@ -32,23 +32,21 @@
                 if (contentType.startsWith('image/')) {
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(data);
-                    document.body.innerHTML = ''; 
+                    document.body.innerHTML = '';
                     document.body.appendChild(img);
-                } else if (contentType.startsWith('audio/')) {
-                    const audio = document.createElement('audio');
-                    audio.controls = true;
-                    audio.autoplay = true;
-                    audio.src = URL.createObjectURL(data);
-                    document.body.innerHTML = ''; 
-                    document.body.appendChild(audio);
-                } else if (contentType.startsWith('text/')) {
+                } else if (contentType.startsWith('audio/mpeg')) {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(data);
+                    downloadLink.download = url.split('/').pop();
+                    downloadLink.innerText = 'Download MP3: ' + downloadLink.download;
+                    document.body.innerHTML = '';
+                    document.body.appendChild(downloadLink);
+                } else {
                     const text = await response.text();
                     document.body.innerText = text;
-                } else {
-                    document.body.innerText = 'Unsupported content type: ' + contentType;
                 }
             } catch (error) {
-                document.body.innerText = 'Error fetching the URL: ' + error.message;
+                document.body.innerText = 'Error fetching the URL: ' + error;
             }
         }
 

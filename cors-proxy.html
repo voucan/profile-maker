@@ -35,12 +35,11 @@
                     document.body.innerHTML = '';
                     document.body.appendChild(img);
                 } else if (contentType.startsWith('audio/mpeg')) {
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = URL.createObjectURL(data);
-                    downloadLink.download = url.split('/').pop();
-                    downloadLink.innerText = 'Download MP3: ' + downloadLink.download;
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = URL.createObjectURL(data);
                     document.body.innerHTML = '';
-                    document.body.appendChild(downloadLink);
+                    document.body.appendChild(audio);
                 } else {
                     const text = await response.text();
                     document.body.innerText = text;

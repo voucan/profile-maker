@@ -107,7 +107,7 @@
             return;
         }
 
-        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${encodeURIComponent(profileImageLink)}&music=https://voucan.github.io/profile-pages/cors-proxy?data=${encodeURIComponent(musicLink)}`;
+        const profileURL = `p?username=${username}&bio=${bio}&profileImage=${encodeURIComponent(profileImageLink)}&music=${encodeURIComponent(musicLink)}`;
 
         window.location.href = profileURL;
     }

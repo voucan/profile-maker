@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Profile Card">
-    <meta property="og:description" content="View my profile card made with voucan.github.io!">
+    <meta property="og:description" content="View my profile card made with profile-maker.pages.dev!">
     <meta property="og:image" content="https://i.ibb.co/1RfL4pB/guest.png">
     <title>USERNAME - Profile</title>
     <link rel="icon" href="PROFILE_ICON" type="image/png">
@@ -17,6 +17,9 @@
             background-color: black;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         canvas {
             position: fixed;
@@ -90,7 +93,6 @@
         <img id="profileImage" src="" alt="Profile" onerror="this.onerror=null; this.src='https://via.placeholder.com/120';">
         <h1 id="username">Username</h1>
         <div class="bio" id="bio">About Me</div>
-        <div class="divider"></div>
     </div>
 
     <canvas id="visualizerCanvas"></canvas>
@@ -104,6 +106,8 @@
         const bio = urlParams.get('bio') || 'This is a default bio.';
         const profileImage = urlParams.get('profileImage') || 'https://via.placeholder.com/120';
         const audioSrc = urlParams.get('music') || '';
+        const background = urlParams.get('background') || '';
+        const cardBackground = urlParams.get('cardBackground') || '#1f1e1e';
 
         document.title = `${username} - Profile`;
         document.querySelector('meta[property="og:title"]').content = username;
@@ -114,6 +118,8 @@
         document.getElementById('username').textContent = username;
         document.getElementById('bio').textContent = bio;
         document.getElementById('profileImage').src = profileImage;
+        document.body.style.backgroundImage = `url('${background}')`;
+        document.querySelector('.container').style.backgroundColor = cardBackground;
 
         const canvas = document.getElementById('visualizerCanvas');
         const audio = document.getElementById('audio');

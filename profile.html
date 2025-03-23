@@ -121,59 +121,6 @@
         document.body.style.backgroundImage = `url('${background}')`;
         document.querySelector('.container').style.backgroundColor = cardBackground;
 
-        const canvas = document.getElementById('visualizerCanvas');
-        const audio = document.getElementById('audio');
-        const ctx = canvas.getContext('2d');
-        let audioContext, analyser, dataArray;
-
-        function setupCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function setupAudio() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioContext.createMediaElementSource(audio);
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 256;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            animate();
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            analyser.getByteFrequencyData(dataArray);
-            const barWidth = (canvas.width / dataArray.length) * 2.5;
-            let barHeight;
-            let x = 0;
-
-            for (let i = 0; i < dataArray.length; i++) {
-                barHeight = dataArray[i] || 2.5;
-                const hue = (i / dataArray.length) * 360;
-                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
-                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        async function fetchAudio() {
-            if (audioSrc) {
-                try {
-                    const response = await fetch(audioSrc);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    const blob = await response.blob();
-                    const objectUrl = URL.createObjectURL(blob);
-                    audio.src = objectUrl;
-                } catch (error) {
-                    console.error('Fetch error:', error);
-                }
-            }
-        }
-
         function enterSite() {
             document.querySelector('.overlay').classList.add('fade-out');
             fetchAudio().then(() => {
